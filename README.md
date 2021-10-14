@@ -70,7 +70,7 @@ The trained checkpoint can be downloaded. [BaiduYun](https://pan.baidu.com/s/1-g
 ```
 python test_code/test.py
 ```
-The predicted saliency map of ECSSD can be downloaded. [BaiduYun](https://pan.baidu.com/s/1C95lorSyeKUaz05ZdWQ0mA) (Code: 1h4g) All results including ECSSD,
+The predicted saliency map of ECSSD can be downloaded. [BaiduYun](https://pan.baidu.com/s/1C95lorSyeKUaz05ZdWQ0mA) (Code: 1h4g) Results on different datasets including ECSSD,
 DUT-OMRON, PASCAL-S, HKU-IS, DUTS-TE, XPIE can all obtain by above testing code.
 
 ### Evaluation
