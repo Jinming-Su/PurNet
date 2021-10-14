@@ -1,0 +1,39 @@
+import os
+import os.path
+
+import torch.utils.data as data
+from PIL import Image
+import scipy.io as scio
+
+
+def make_dataset(root):
+    img_list = [os.path.splitext(f)[0] for f in os.listdir(os.path.join(root, 'image')) if f.endswith('.jpg')]
+    return [(os.path.join(root, 'image/' + img_name + '.jpg'), os.path.join(root, 'groundtruth/' + img_name + '.png'), os.path.join(root, 'image_sp/' + img_name + '.mat')) for img_name in img_list]
+
+
+class ImageFolder(data.Dataset):
+    # image and gt should be in the same folder and have same filename except extended name (jpg and png respectively)
+    def __init__(self, root, joint_transform=None, transform=None, target_transform=None):
+        self.root = root
+        self.imgs = make_dataset(root)
+        self.joint_transform = joint_transform
+        self.transform = transform
+        self.target_transform = target_transform
+
+    def __getitem__(self, index):
+        img_path, gt_path, sp_path = self.imgs[index]
+        img = Image.open(img_path).convert('RGB')
+        target = Image.open(gt_path).convert('L')
+        sp = Image.fromarray(scio.loadmat(sp_path)['sp']).convert('I')
+        if self.joint_transform is not None:
+            img, target, sp = self.joint_transform(img, target, sp)
+        if self.transform is not None:
+            img = self.transform(img)
+        if self.target_transform is not None:
+            target = self.target_transform(target)
+            sp = self.target_transform(sp)
+
+        return img, target, sp
+
+    def __len__(self):
+        return len(self.imgs)
